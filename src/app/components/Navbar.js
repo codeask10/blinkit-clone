@@ -7,7 +7,7 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 
 const Navbar = () => {
   return (
-    <div className="w-full fixed h-24 flex items-center border-b border-gray-300 bg-white">
+    <div className="w-full h-24 flex items-center border-b border-gray-300 bg-white">
       {/* Logo Section */}
       <div className="hidden lg:flex w-2/12 h-full justify-center items-center border-r border-gray-300">
         <Image src={brandImageUrl} width={120} height={130} alt="Brand Logo" />
