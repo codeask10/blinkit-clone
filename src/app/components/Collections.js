@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const Collections = ({ collections }) => {
   return (
-    <div className="sm:max-w-screen-md md:max-w-screen-xl lg:max-w-screen-2xl mx-auto my-10">
+    <div className=" my-10">
       <h1 className="text-2xl font-medium">Top Collections</h1>
       <div className="flex gap-2 h-60 my-5">
         {collections.length > 0 &&

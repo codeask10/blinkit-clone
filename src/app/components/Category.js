@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Category = ({ categoryCollection }) => {
   return (
-    <section className="max-w-screen-2xl mx-auto my-8">
+    <section className="my-8">
       <h2 className="text-2xl font-semibold mb-4">Categories</h2>
       <div className="grid grid-cols-[repeat(auto-fill,_minmax(130px,_1fr))] gap-4">
         {categoryCollection.map(({ category }) => (
