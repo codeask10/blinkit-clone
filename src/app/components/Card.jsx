@@ -2,12 +2,14 @@
 import React from "react";
 import { FaPlus, FaRupeeSign } from "react-icons/fa";
 import Image from "next/image";
+import Link from 'next/link'
 
 const truncateText = (text, length) =>
     text.length > length ? `${text.substring(0, length)}...` : text;
 
 const Card = ({ item }) => {
     const company_name = item?.brand?.name || "";
+    const slug = item?.slug || "";
     const item_name = item?.variants?.[0]?.fullName || "No Name Available";
     const url = item?.variants?.[0]?.images?.[0] || "/placeholder.png"; // Provide a placeholder URL
     const qty = item?.variants?.[0]?.name || "N/A";
@@ -20,14 +22,16 @@ const Card = ({ item }) => {
             <div className="flex flex-col h-[250px] md:h-[300px] w-[200px] box-border mt-5">
                 {/* Image Container */}
                 <div className="h-[180px] w-[90%] border border-gray-400 rounded-lg relative flex justify-center mx-auto">
-                    <Image
-                        className="object-cover w-[130px]"
-                        src={url}
-                        alt={item_name}
-                        width="0"
-                        height="0"
-                        sizes="100vw"
-                    />
+                    <Link href={`/products/${slug}`} >
+                        <Image
+                            className="object-cover w-[130px] h-full p-2"
+                            src={url}
+                            alt={item_name}
+                            width="0"
+                            height="0"
+                            sizes="100vw"
+                        />
+                    </Link>
                     <button className="absolute bottom-[0.75rem] right-[1rem] bg-red-500 text-white p-2 rounded-md text-lg">
                         <FaPlus />
                     </button>
