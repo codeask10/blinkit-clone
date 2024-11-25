@@ -1,7 +1,6 @@
 "use client";
 
 import Card from "@/app/components/Card";
-import CardItems from "@/app/components/CardItems";
 import Details from "@/app/components/Details";
 import { useState, useEffect, use } from "react";
 

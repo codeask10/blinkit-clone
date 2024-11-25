@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
 import Carousel from "./components/Carousel";
 import Category from "./components/Category";
 import Collections from "./components/Collections";

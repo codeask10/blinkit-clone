@@ -1,15 +1,17 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+
+import React, { useState, useEffect, useContext } from "react";
 import ImageSlider from "./ImageSlider";
+import { CartContext } from "../context/CartContext";
+import { handleAddToCart, handleDecreaseQty, handleIncreaseQty, getCartItemQty } from "../utils/cart";
 
 const Details = ({ detail }) => {
-    // Extract product details
+    const { cart, addToCart, updateQty, removeFromCart } = useContext(CartContext);
+
     const variants = detail?.[0]?.value?.variants || [];
     const metaData = detail?.[0]?.value?.metaData || {};
 
     const [selectedVariant, setSelectedVariant] = useState(null);
-    const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
         if (variants.length > 0 && !selectedVariant) {
@@ -21,10 +23,6 @@ const Details = ({ detail }) => {
         setSelectedVariant(variant);
     };
 
-    const handleClickCart = (variant) => {
-        setCartItems((prevItems) => [...prevItems, variant]);
-    }
-    console.log(cartItems);
     const {
         images = [],
         fullName: productName = "",
@@ -40,7 +38,6 @@ const Details = ({ detail }) => {
             {/* Image Section */}
             <div className="w-1/2 h-full flex justify-center items-center relative border-r border-gray-300">
                 <ImageSlider images={images} image={images[0]} />
-
             </div>
 
             {/* Product Details Section */}
@@ -54,7 +51,7 @@ const Details = ({ detail }) => {
                 <div className="flex flex-wrap gap-4">
                     {variants.map((variant, index) => {
                         const isSelected = selectedVariant?.id === variant.id;
-                        const { name: variantQty } = variant;
+                        const { name: variantQtyName } = variant;
                         const { mrp: variantMrp = 0, discount: variantDiscount = 0 } =
                             variant.storeSpecificData[0] || {};
                         const variantDiscountPrice =
@@ -69,7 +66,7 @@ const Details = ({ detail }) => {
                                     }`}
                                 onClick={() => handleVariantSelect(variant)}
                             >
-                                <div>{variantQty}</div>
+                                <div>{variantQtyName}</div>
                                 <div className="font-bold">
                                     ₹ {variantDiscountPrice.toFixed(2)}
                                 </div>
@@ -91,9 +88,30 @@ const Details = ({ detail }) => {
                         </div>
                         <div className="text-sm text-gray-600">Inclusive of all taxes</div>
                     </div>
-                    <button onClick={() => handleClickCart(selectedVariant)} className="bg-red-700 text-white font-bold py-3 px-6 rounded-lg">
-                        Add To Cart
-                    </button>
+                    {getCartItemQty(selectedVariant?.id, cart) > 0 ? (
+                        <div className="flex items-center gap-4 bg-red-700 text-white font-bold py-3 px-6 rounded-lg">
+                            <button
+                                onClick={() => handleDecreaseQty(selectedVariant?.id, cart, updateQty, removeFromCart)}
+                            >
+                                -
+                            </button>
+                            <span className="text-lg font-bold">
+                                {getCartItemQty(selectedVariant?.id, cart)}
+                            </span>
+                            <button
+                                onClick={() => handleIncreaseQty(selectedVariant?.id, cart, updateQty)}
+                            >
+                                +
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => { handleAddToCart(addToCart(selectedVariant)) }}
+                            className="bg-red-700 text-white font-bold py-3 px-6 rounded-lg"
+                        >
+                            Add To Cart
+                        </button>
+                    )}
                 </div>
 
                 <hr className="w-full my-3" />

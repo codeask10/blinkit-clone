@@ -3,7 +3,6 @@ import Image from "next/image";
 
 const ImageSlider = ({ images, image }) => {
 
-    console.log(images)
     useEffect(() => {
         for (let i = 0; i < 2; i++) {
             images.push("https://thumbs.dreamstime.com/b/no-photo-available-vector-icon-default-image-symbol-picture-coming-soon-web-site-mobile-app-236105298.jpg");
