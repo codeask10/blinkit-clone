@@ -7,6 +7,7 @@ import { IoIosSearch } from "react-icons/io";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { CartContext } from "../context/CartContext";
 import Cart from "./Cart";
+import Link from "next/link";
 
 const Navbar = () => {
   const { cart } = useContext(CartContext);
@@ -17,12 +18,14 @@ const Navbar = () => {
       <div className="w-full fixed top-0 z-10 h-24 flex border-b border-gray-300 bg-white">
         {/* Logo Section */}
         <div className="hidden lg:flex w-2/12 h-full justify-center items-center border-r border-gray-300">
-          <Image
-            src={brandImageUrl}
-            width={120}
-            height={130}
-            alt="Brand Logo"
-          />
+          <Link href="/">
+            <Image
+              src={brandImageUrl}
+              width={120}
+              height={130}
+              alt="Brand Logo"
+            />
+          </Link>
         </div>
 
         {/* Main Content Section */}

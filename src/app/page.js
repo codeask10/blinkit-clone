@@ -55,6 +55,7 @@ const Home = () => {
                 return (
                   <CardItems
                     key={layout.value.title}
+                    data={layout.data}
                     title={layout.data.title}
                     collection={layout.value.collection}
                   />
