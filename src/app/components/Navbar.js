@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import brandImageUrl from "@/app/assets/img.webp";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -16,10 +16,29 @@ import UserDetails from "./UserDetails";
 const Navbar = () => {
   const { cart } = useContext(CartContext);
   const { user } = useContext(UserContext);
-  console.log(user);
+
   const [isOpen, setOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      // Check if the click is outside the modal
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsDropdownVisible(false); // Close modal
+      }
+    };
+
+    if (isDropdownVisible) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [isDropdownVisible]);
+
   return (
     <>
       <Cart className="relative" open={isOpen} setOpen={setOpen} />
@@ -70,6 +89,7 @@ const Navbar = () => {
           ) : (
             <div className="relative">
               <button
+                ref={modalRef}
                 type="button"
                 className="border-b-4  border-b-red-500"
                 onClick={() => {
