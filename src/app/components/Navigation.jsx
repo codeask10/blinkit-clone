@@ -30,8 +30,8 @@ const Navigation = () => {
     }, []);
 
     // Split items into visible and hidden
-    const visibleItems = navItems.slice(0, 9);
-    const hiddenItems = navItems.slice(9);
+    const visibleItems = navItems.slice(0, 10);
+    const hiddenItems = navItems.slice(10);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -42,10 +42,10 @@ const Navigation = () => {
     }
 
     return (
-        <div className="w-full  fixed top-24 bg-gray-100 border-b z-20">
+        <div className="w-full fixed top-24 bg-gray-100 border-b z-10">
             <nav
                 ref={navRef}
-                className=" max-w-screen-2xl mx-auto flex items-center gap-4 px-4 py-4 overflow-visible"
+                className=" max-w-screen-2xl mx-auto flex items-center gap-4 px-4 py-4 z-10 "
             >
                 {visibleItems.map((item, index) => (
                     <Link

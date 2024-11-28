@@ -27,7 +27,7 @@ const Categories = () => {
   }, [category]);
 
 
-  if (product.length === 0) {
+  if (product?.length === 0) {
     return <div>No products available in this category.</div>; // Show message if no products
   }
 

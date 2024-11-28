@@ -6,12 +6,20 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { CartContext } from "../context/CartContext";
+import { UserContext } from "../context/UserContext";
 import Cart from "./Cart";
 import Link from "next/link";
+import Login from "./Login";
+import { FaUserCircle } from "react-icons/fa";
+import UserDetails from "./UserDetails";
 
 const Navbar = () => {
   const { cart } = useContext(CartContext);
+  const { user } = useContext(UserContext);
+  console.log(user);
   const [isOpen, setOpen] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   return (
     <>
       <Cart className="relative" open={isOpen} setOpen={setOpen} />
@@ -52,7 +60,30 @@ const Navbar = () => {
           </div>
 
           {/* Login Section */}
-          <div className="text-lg font-medium">Login</div>
+          {!user ? (
+            <button
+              onClick={() => setLoginModalOpen(true)}
+              className="text-lg p-2 font-medium cursor-pointer"
+            >
+              Login
+            </button>
+          ) : (
+            <div className="relative">
+              <button
+                type="button"
+                className="border-b-4  border-b-red-500"
+                onClick={() => {
+                  setIsDropdownVisible(!isDropdownVisible);
+                }}
+              >
+                <div className="flex gap-1">
+                  <FaUserCircle className="h-10 w-8" />
+                  <div className="p-2">Account</div>
+                </div>
+              </button>
+              {isDropdownVisible && <UserDetails />}
+            </div>
+          )}
 
           {/* Cart Button */}
           <div className="hidden lg:flex ">
@@ -80,6 +111,14 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      {isLoginModalOpen && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          {/* Modal Content */}
+          <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
+            <Login setLoginModalOpen={setLoginModalOpen} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

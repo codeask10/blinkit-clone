@@ -29,7 +29,6 @@ export const CartProvider = ({ children }) => {
         const { id, storeSpecificData } = variants;
         const mrp = storeSpecificData?.[0]?.mrp || 0;
         const discount = storeSpecificData?.[0]?.discount || 0;
-        console.log(variants);
         setCart((prevCart) => {
             const existingItemIndex = prevCart.findIndex((item) => item.id === id);
 

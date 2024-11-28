@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="sm:max-w-screen-md md:max-w-screen-xl lg:max-w-screen-2xl mx-auto mt-28">
+      <div className="sm:max-w-screen-md md:max-w-screen-xl lg:max-w-screen-xl mx-auto mt-28">
         {homeData.length > 0 &&
           homeData.map((layout) => {
             let cases = layout.value.title ? layout.value.title : layout.name;

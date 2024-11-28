@@ -7,7 +7,7 @@ const Collections = ({ collections }) => {
     <div className=" my-10">
       <h1 className="text-2xl font-medium">Top Collections</h1>
       <div className="flex gap-2 h-60 my-5">
-        {collections.length > 0 &&
+        {collections?.length > 0 &&
           collections.map(({ category }) => (
             <div key={category.id} className="w-1/3">
               <div className=" h-40">
