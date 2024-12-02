@@ -2,6 +2,7 @@
 
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { URL } from "../../../config";
 
 const Login = ({ setLoginModalOpen }) => {
     const [isSignIn, setIsSignIn] = useState(true);
@@ -15,7 +16,7 @@ const Login = ({ setLoginModalOpen }) => {
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("https://andizshop.zopping.com/api/login", {
+            const response = await fetch(`${URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +53,7 @@ const Login = ({ setLoginModalOpen }) => {
         e.preventDefault();
         console.log(signUp);
         try {
-            const response = await fetch("https://andizshop.zopping.com/api/register", {
+            const response = await fetch(`${URL}api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -65,7 +66,6 @@ const Login = ({ setLoginModalOpen }) => {
             if (result.status === "SUCCESS") {
                 setSignUp({ name: "", lastName: "", email: "", password: "" });
                 alert("Account logged in successfully", "success");
-                setLoginModalOpen(false);
                 setIsSignIn(true);
             }
             else if (result.status === "ERROR") {
