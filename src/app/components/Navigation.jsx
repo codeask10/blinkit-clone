@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from 'next/link'
+import { URL } from "../../../config";
 
 const Navigation = () => {
     const navRef = useRef(null);
@@ -12,7 +13,7 @@ const Navigation = () => {
     useEffect(() => {
         const fetchNavItems = async () => {
             try {
-                const response = await fetch("https://modernbazar.zopping.com/api/nav");
+                const response = await fetch(`${URL}/api/nav`);
                 const result = await response.json();
 
                 if (result.code === 200 && result.data.length > 0) {
@@ -30,8 +31,8 @@ const Navigation = () => {
     }, []);
 
     // Split items into visible and hidden
-    const visibleItems = navItems.slice(0, 10);
-    const hiddenItems = navItems.slice(10);
+    const visibleItems = navItems.slice(0, 8);
+    const hiddenItems = navItems.slice(8);
 
     if (loading) {
         return <div>Loading...</div>;

@@ -26,7 +26,7 @@ const Navbar = () => {
     const handleOutsideClick = (event) => {
       // Check if the click is outside the modal
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsDropdownVisible(false); // Close modal
+        setIsDropdownVisible(false); // Close the dropdown
       }
     };
 
@@ -38,6 +38,9 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [isDropdownVisible]);
+  const toggleDropdown = () => {
+    setIsDropdownVisible((prev) => !prev);
+  };
 
   return (
     <>
@@ -89,19 +92,16 @@ const Navbar = () => {
           ) : (
             <div className="relative">
               <button
-                ref={modalRef}
                 type="button"
-                className="border-b-4  border-b-red-500"
-                onClick={() => {
-                  setIsDropdownVisible(!isDropdownVisible);
-                }}
+                className="border-b-4 border-b-red-500"
+                onClick={toggleDropdown}
               >
                 <div className="flex gap-1">
                   <FaUserCircle className="h-10 w-8" />
                   <div className="p-2">Account</div>
                 </div>
               </button>
-              {isDropdownVisible && <UserDetails />}
+              {isDropdownVisible && <UserDetails modalRef={modalRef} />}
             </div>
           )}
 
@@ -113,12 +113,12 @@ const Navbar = () => {
               }}
               className="bg-green-700 text-white font-bold py-4 px-4 rounded-lg relative flex items-center"
             >
-              {cart.length > 0 ? (
+              {cart?.items?.length > 0 ? (
                 <div className="flex ">
                   {" "}
                   <MdOutlineShoppingCart />{" "}
                   <div className="absolute top-0 left-8 bg-red rounded-full ">
-                    {cart.length}
+                    {cart?.items?.length}
                   </div>
                 </div>
               ) : (

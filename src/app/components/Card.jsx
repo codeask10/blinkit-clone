@@ -4,14 +4,13 @@ import { FaPlus, FaRupeeSign, FaMinus } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { CartContext } from "../context/CartContext";
-import { getCartItemQty, handleAddToCart, handleDecreaseQty, handleIncreaseQty } from "../utils/cart";
 import Select from "./Select";
 
 const truncateText = (text, length) =>
     text.length > length ? `${text.substring(0, length)}...` : text;
 
 const Card = ({ item }) => {
-    const { cart, addToCart, updateQty, removeFromCart } = useContext(CartContext);
+    const { addToCart, decreaseQty, getCartItemQty } = useContext(CartContext);
     const [selectedVariant, setSelectedVariant] = useState(item?.variants?.[0]);
 
     const id = selectedVariant?.id || "";
@@ -39,22 +38,22 @@ const Card = ({ item }) => {
                             sizes="100vw"
                         />
                     </Link>
-                    {getCartItemQty(id, cart) ? (
+                    {getCartItemQty(id) ? (
                         <div className="absolute bottom-[0.75rem] right-[1rem] flex items-center gap-2 bg-red-500 text-white p-2 rounded-md text-lg">
                             <button onClick={() => {
-                                handleDecreaseQty(id, cart, updateQty, removeFromCart)
+                                decreaseQty(id)
                             }}>
                                 <FaMinus />
                             </button>
-                            <span>{getCartItemQty(id, cart)}</span>
-                            <button onClick={() => { handleIncreaseQty(id, cart, updateQty) }}>
+                            <span>{getCartItemQty(id)}</span>
+                            <button onClick={() => addToCart(id)}>
                                 <FaPlus />
                             </button>
                         </div>
                     ) : (
                         <button
                             className="absolute bottom-[0.75rem] right-[1rem] bg-red-500 text-white p-2 rounded-md text-lg"
-                            onClick={() => { handleAddToCart(selectedVariant, addToCart) }}
+                            onClick={() => addToCart(id)}
                         >
                             <FaPlus />
                         </button>

@@ -1,84 +1,113 @@
 "use client";
 
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
+import { URL } from "../../../config";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState(null);
+    const [items, setItems] = useState([]);
+    const address = {
+        landmark: "ZopSmart, 24th Main Rd, 22nd Cross Rd, Parangi Palaya, Sector 2, HSR Layout, Bengaluru, Karnataka 560102, India",
+        pincode: "560102",
+        city: "Bengaluru",
+        state: "Karnataka",
+        countryCode: "IN",
+        latitude: 12.9088233,
+        longitude: 77.6495937
+    };
 
-    // Load the cart data from localStorage on initial render
-    useEffect(() => {
-        const storedCart = localStorage.getItem("cart");
-        if (storedCart) {
-            const parsedCart = JSON.parse(storedCart);
-            setCart(parsedCart?.items || []); // Set cart items if present
+    const getCart = async () => {
+        try {
+            const response = await fetch(`${URL}/api/cart?storeId=25539&orderType=DELIVERY`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': "Bearer 1732879335244413077.zop6749a3e7bb895.OHRJD"
+                },
+            });
+            const result = await response.json();
+            if (result.status === "SUCCESS" && result.data?.cart?.items) {
+                setCart(result.data.cart);
+            } else if (result.status === "ERROR") {
+                console.error(result.message);
+                alert(result.message);
+            }
+        } catch (error) {
+            console.error("Error fetching cart data:", error);
         }
+    };
+
+    const updateCart = async () => {
+        try {
+            const response = await fetch(`${URL}/api/cart`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': "Bearer 1732879335244413077.zop6749a3e7bb895.OHRJD"
+                },
+                body: JSON.stringify({ cart: { items: items }, orderType: "DELIVERY", storeId: "25539", address: address })
+            });
+            const result = await response.json();
+            if (result.status === "SUCCESS") {
+                setCart(result.data.cart);
+            } else {
+                console.error("API Error:", result.message);
+                alert(result.message);
+            }
+        } catch (error) {
+            console.error("Network Error:", error);
+            alert("An error occurred while updating the cart. Please try again.");
+        }
+    };
+
+    useEffect(() => {
+        getCart();
     }, []);
 
-    // Update localStorage whenever the cart changes
     useEffect(() => {
-        if (cart.length > 0) {
-            const cartData = { items: cart }; // Store cart as an object with `items`
-            localStorage.setItem("cart", JSON.stringify(cartData));
+        if (items.length > 0) {
+            updateCart();
         }
-    }, [cart]);
+    }, [items]);
 
-    // Function to add a product to the cart
-    const addToCart = (variants, qty = 1) => {
-        const { id, storeSpecificData } = variants;
-        const mrp = storeSpecificData?.[0]?.mrp || 0;
-        const discount = storeSpecificData?.[0]?.discount || 0;
-        setCart((prevCart) => {
-            const existingItemIndex = prevCart.findIndex((item) => item.id === id);
+    const addToCart = (id) => {
+        const existingItem = cart?.items.find((item) => item.product.id === id);
+        if (existingItem) {
+            let { product, q, t } = existingItem;
+            q = parseInt(q) + 1
+            const val = ({ q: q.toString(), id: product.id.toString(), t });
+            setItems([val]);
+        } else {
+            setItems([{ id: id.toString(), q: "1", t: Date.now() }]);
+        }
+    };
 
-            if (existingItemIndex > -1) {
-                // If item already exists, update the quantity
-                const updatedCart = [...prevCart];
-                updatedCart[existingItemIndex].qty += qty;
-                return updatedCart;
+    const decreaseQty = (id) => {
+        const existingItem = cart?.items.find((item) => item.product.id === id);
+        if (existingItem) {
+            let { product, q, t } = existingItem;
+            q = parseInt(q);
+            if (q > 1) {
+                q = q - 1;
+                const val = ({ q: q.toString(), id: product.id.toString(), t });
+                setItems(val);
             } else {
-                // Add the new item to the cart
-                return [...prevCart, { id, mrp, discount, variants, qty }];
+                const val = ({ q: q.toString(), id: product.id.toString(), t });
+                setItems(val);
             }
-        });
+        }
     };
 
-    // Function to update quantity of a cart item
-    const updateQty = (id, qty) => {
-        setCart((prevCart) =>
-            prevCart.map((item) =>
-                item.id === id
-                    ? { ...item, qty: Math.max(1, qty) } // Ensure qty is at least 1
-                    : item
-            )
-        );
-    };
+    const getCartItemQty = (itemId) => {
 
-    // Function to remove an item from the cart
-    const removeFromCart = (id) => {
-        setCart((prevCart) => {
-            const updatedCart = prevCart.filter((item) => item.id !== id); // Remove item by ID
-
-            // If the cart is empty after removal, delete it from localStorage
-            if (updatedCart.length === 0) {
-                localStorage.removeItem("cart");
-            } else {
-                // Otherwise, update localStorage with the remaining items
-                localStorage.setItem("cart", JSON.stringify({ items: updatedCart }));
-            }
-
-            return updatedCart;
-        });
-    };
-
-    // Function to clear the entire cart
-    const clearCart = () => {
-        setCart([]); // Reset cart to an empty array
+        const item = cart?.items?.find((item) => item.product.id === itemId);
+        return item ? parseInt(item.q) : 0;
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, updateQty, removeFromCart, clearCart }}>
+        <CartContext.Provider value={{ cart, addToCart, decreaseQty, getCartItemQty }}>
             {children}
         </CartContext.Provider>
     );
