@@ -1,17 +1,34 @@
 "use client"
 import React, { createContext, useState, useEffect } from "react";
-
+import { URL } from "../../../config";
 export const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser[0] || {});
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`${URL}/api/me`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': "Bearer 1733118769436670517.zop674d4b315ba35.HNPUX"
+        },
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.status === "SUCCESS") {
+        setUser(result.data.customer);
+      } else {
+        console.error("API Error:", result.message);
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error("Network Error:", error);
+      alert("An error occurred while fetching user detail. Please try again.");
     }
+  }
+  useEffect(() => {
+    fetchUserData();
   }, []);
 
 
