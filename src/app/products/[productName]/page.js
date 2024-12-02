@@ -3,6 +3,7 @@
 import Card from "@/app/components/Card";
 import Details from "@/app/components/Details";
 import { useState, useEffect, use } from "react";
+import { URL } from "../../../../config";
 
 const Page = ({ params }) => {
   const [details, setDetails] = useState(null);
@@ -11,7 +12,7 @@ const Page = ({ params }) => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `https://modernbazar.zopping.com/api/layout/product?url=${productName}`
+        `${URL}/api/layout/product?url=${productName}`
       );
       const res = await response.json();
       if (res.status === "SUCCESS") {

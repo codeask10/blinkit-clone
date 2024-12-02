@@ -3,10 +3,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import ImageSlider from "./ImageSlider";
 import { CartContext } from "../context/CartContext";
-import { handleAddToCart, handleDecreaseQty, handleIncreaseQty, getCartItemQty } from "../utils/cart";
+// import { handleAddToCart, handleDecreaseQty, handleIncreaseQty, getCartItemQty } from "../utils/cart";
 
 const Details = ({ detail }) => {
-    const { cart, addToCart, updateQty, removeFromCart } = useContext(CartContext);
+    const { addToCart, decreaseQty, getCartItemQty } = useContext(CartContext);
 
     const variants = detail?.[0]?.value?.variants || [];
     const metaData = detail?.[0]?.value?.metaData || {};
@@ -88,25 +88,25 @@ const Details = ({ detail }) => {
                         </div>
                         <div className="text-sm text-gray-600">Inclusive of all taxes</div>
                     </div>
-                    {getCartItemQty(selectedVariant?.id, cart) > 0 ? (
+                    {getCartItemQty(selectedVariant?.id) > 0 ? (
                         <div className="flex items-center gap-4 bg-red-700 text-white font-bold py-3 px-6 rounded-lg">
                             <button
-                                onClick={() => handleDecreaseQty(selectedVariant?.id, cart, updateQty, removeFromCart)}
+                                onClick={() => decreaseQty(selectedVariant?.id)}
                             >
                                 -
                             </button>
                             <span className="text-lg font-bold">
-                                {getCartItemQty(selectedVariant?.id, cart)}
+                                {getCartItemQty(selectedVariant?.id)}
                             </span>
                             <button
-                                onClick={() => handleIncreaseQty(selectedVariant?.id, cart, updateQty)}
+                                onClick={() => addToCart(selectedVariant?.id)}
                             >
                                 +
                             </button>
                         </div>
                     ) : (
                         <button
-                            onClick={() => { handleAddToCart(addToCart(selectedVariant)) }}
+                            onClick={() => addToCart(selectedVariant?.id)}
                             className="bg-red-700 text-white font-bold py-3 px-6 rounded-lg"
                         >
                             Add To Cart
