@@ -13,7 +13,7 @@ const Categories = () => {
   const category = searchParams.get('category');
 
   // Fetch data with error handling
-  const fetchData = async () => {
+  const fetchData = async (category) => {
     try {
       const response = await fetch(`${URL}/api/product?category=${category}`);
       const result = await response.json();
@@ -24,7 +24,7 @@ const Categories = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(category);
   }, [category]);
 
 

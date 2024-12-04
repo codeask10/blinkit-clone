@@ -21,7 +21,7 @@ const Card = ({ item }) => {
     const qty = selectedVariant?.name || "N/A";
     const mrp = parseInt(selectedVariant?.storeSpecificData?.[0]?.mrp || "0", 10);
     const discount = parseInt(selectedVariant?.storeSpecificData?.[0]?.discount || "0", 10);
-    const discount_price = mrp - mrp * (discount / 100);
+    const discount_price = mrp - (mrp * (discount / 100));
 
     return (
         <>
@@ -71,7 +71,7 @@ const Card = ({ item }) => {
                 {/* Price Container */}
                 <div className="flex items-center gap-3 mt-2">
                     <div className="flex items-center font-bold text-lg text-black">
-                        <FaRupeeSign /> {discount_price}
+                        <FaRupeeSign /> {discount_price.toFixed(2)}
                     </div>
                     <div className="flex items-center text-gray-500 text-sm line-through">
                         (<FaRupeeSign /> {mrp})
