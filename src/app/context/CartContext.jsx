@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': "Bearer 1732879335244413077.zop6749a3e7bb895.OHRJD"
+                    'authorization': `Bearer ${localStorage.getItem("token")}`
                 },
             });
             const result = await response.json();
@@ -45,7 +45,7 @@ export const CartProvider = ({ children }) => {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': "Bearer 1732879335244413077.zop6749a3e7bb895.OHRJD"
+                    'authorization': `Bearer ${localStorage.getItem("token")}`
                 },
                 body: JSON.stringify({ cart: { items: items }, orderType: "DELIVERY", storeId: "25539", address: address })
             });
@@ -64,6 +64,7 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
         getCart();
+        localStorage.setItem("token", "1733118769436670517.zop674d4b315ba35.HNPUX");
     }, []);
 
     useEffect(() => {

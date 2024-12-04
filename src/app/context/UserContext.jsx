@@ -11,11 +11,10 @@ const UserProvider = ({ children }) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'authorization': "Bearer 1733118769436670517.zop674d4b315ba35.HNPUX"
+          'authorization': `Bearer ${localStorage.getItem("token")}`
         },
       });
       const result = await response.json();
-      console.log(result);
       if (result.status === "SUCCESS") {
         setUser(result.data.customer);
       } else {
