@@ -79,174 +79,179 @@ const Login = ({ setLoginModalOpen }) => {
 
 
     return (
-        <div className="relative p-6 max-w-md w-full mx-auto">
-            <div className="bg-white rounded-lg shadow-md">
-                {/* Header with Title and Close Button */}
-                <div className="flex items-center justify-between border-b px-4 py-3">
-                    <h3 className="text-xl font-semibold text-gray-900">
-                        {isSignIn ? "Sign In" : "Sign Up"}
-                    </h3>
-                    <button
-                        onClick={() => setLoginModalOpen(false)}
-                        className="text-gray-600 hover:text-gray-900 focus:outline-none"
-                    >
-                        <span className="sr-only">Close</span>
-                        &#x2715;
-                    </button>
-                </div>
-
-                {/* Form Content */}
-                <div className="p-6">
-                    {isSignIn ? (
-                        // Sign In Form
-                        <form className="space-y-4" onSubmit={handleLoginSubmit}>
-                            <div>
-                                <label
-                                    htmlFor="email"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={signIn.email}
-                                    onChange={handleSignInChange}
-                                    className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Enter email... "
-                                    required
-                                />
-
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="password"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    placeholder="••••••••"
-                                    required
-                                    onChange={handleSignInChange}
-                                    value={signIn.password}
-                                />
-                            </div>
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+            {/* Modal Content */}
+            <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
+                <div className="relative p-6 max-w-md w-full mx-auto">
+                    <div className="bg-white rounded-lg shadow-md">
+                        {/* Header with Title and Close Button */}
+                        <div className="flex items-center justify-between border-b px-4 py-3">
+                            <h3 className="text-xl font-semibold text-gray-900">
+                                {isSignIn ? "Sign In" : "Sign Up"}
+                            </h3>
                             <button
-                                type="submit"
-                                className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                onClick={() => setLoginModalOpen(false)}
+                                className="text-gray-600 hover:text-gray-900 focus:outline-none"
                             >
-                                Sign In
+                                <span className="sr-only">Close</span>
+                                &#x2715;
                             </button>
-                            <p className="text-sm text-center text-gray-600">
-                                Don&apos;t have an account?{" "}
-                                <button
-                                    type="button"
-                                    onClick={() => setIsSignIn(false)}
-                                    className="text-blue-600 hover:underline"
-                                >
-                                    Sign up
-                                </button>
-                            </p>
-                        </form>
-                    ) : (
-                        // Register Form
-                        <form className="space-y-4" onSubmit={handleSignUpSubmit}>
-                            <div>
-                                <label
-                                    htmlFor="firstName"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    First Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={signUp.name}
-                                    onChange={handleSignUpChange}
-                                    className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    placeholder="eg. Jhon.. "
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="lastName"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Last Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="lastName"
-                                    name="lastName"
-                                    value={signUp.lastName}
-                                    onChange={handleSignUpChange}
-                                    className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    placeholder="eg. Doe.."
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="email"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={signUp.email}
-                                    onChange={handleSignUpChange}
-                                    className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    placeholder="Enter email or phone number"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="password"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                                    placeholder="••••••••"
-                                    required
-                                    onChange={handleSignUpChange}
-                                    value={signUp.password}
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                            >
-                                Sign Up
-                            </button>
-                            <p className="text-sm text-center text-gray-600">
-                                Already have an account?{" "}
-                                <button
-                                    type="button"
-                                    onClick={() => setIsSignIn(true)}
-                                    className="text-green-600 hover:underline"
-                                >
-                                    Sign In
-                                </button>
-                            </p>
-                        </form>
-                    )}
+                        </div>
+
+                        {/* Form Content */}
+                        <div className="p-6">
+                            {isSignIn ? (
+                                // Sign In Form
+                                <form className="space-y-4" onSubmit={handleLoginSubmit}>
+                                    <div>
+                                        <label
+                                            htmlFor="email"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            value={signIn.email}
+                                            onChange={handleSignInChange}
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="Enter email... "
+                                            required
+                                        />
+
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="password"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Password
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            name="password"
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="••••••••"
+                                            required
+                                            onChange={handleSignInChange}
+                                            value={signIn.password}
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        Sign In
+                                    </button>
+                                    <p className="text-sm text-center text-gray-600">
+                                        Don&apos;t have an account?{" "}
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsSignIn(false)}
+                                            className="text-blue-600 hover:underline"
+                                        >
+                                            Sign up
+                                        </button>
+                                    </p>
+                                </form>
+                            ) : (
+                                // Register Form
+                                <form className="space-y-4" onSubmit={handleSignUpSubmit}>
+                                    <div>
+                                        <label
+                                            htmlFor="firstName"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            First Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            value={signUp.name}
+                                            onChange={handleSignUpChange}
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            placeholder="eg. Jhon.. "
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="lastName"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Last Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="lastName"
+                                            name="lastName"
+                                            value={signUp.lastName}
+                                            onChange={handleSignUpChange}
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            placeholder="eg. Doe.."
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="email"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            value={signUp.email}
+                                            onChange={handleSignUpChange}
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            placeholder="Enter email or phone number"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="password"
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Password
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            name="password"
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                                            placeholder="••••••••"
+                                            required
+                                            onChange={handleSignUpChange}
+                                            value={signUp.password}
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="w-full py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                    >
+                                        Sign Up
+                                    </button>
+                                    <p className="text-sm text-center text-gray-600">
+                                        Already have an account?{" "}
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsSignIn(true)}
+                                            className="text-green-600 hover:underline"
+                                        >
+                                            Sign In
+                                        </button>
+                                    </p>
+                                </form>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

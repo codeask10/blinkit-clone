@@ -21,11 +21,17 @@ const Navbar = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const modalRef = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
       // Check if the click is outside the modal
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setIsDropdownVisible(false); // Close the dropdown
       }
     };
@@ -92,6 +98,7 @@ const Navbar = () => {
           ) : (
             <div className="relative">
               <button
+                ref={buttonRef}
                 type="button"
                 className="border-b-4 border-b-red-500"
                 onClick={toggleDropdown}
@@ -101,7 +108,12 @@ const Navbar = () => {
                   <div className="p-2">Account</div>
                 </div>
               </button>
-              {isDropdownVisible && <UserDetails modalRef={modalRef} />}
+              {isDropdownVisible && (
+                <UserDetails
+                  toggleDropdown={toggleDropdown}
+                  modalRef={modalRef}
+                />
+              )}
             </div>
           )}
 
@@ -131,14 +143,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      {isLoginModalOpen && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
-          {/* Modal Content */}
-          <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
-            <Login setLoginModalOpen={setLoginModalOpen} />
-          </div>
-        </div>
-      )}
+      {isLoginModalOpen && <Login setLoginModalOpen={setLoginModalOpen} />}
     </>
   );
 };
