@@ -64,7 +64,6 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
         getCart();
-        localStorage.setItem("token", "1733118769436670517.zop674d4b315ba35.HNPUX");
     }, []);
 
     useEffect(() => {
