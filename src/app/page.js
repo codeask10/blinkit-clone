@@ -4,7 +4,6 @@ import Carousel from "./components/Carousel";
 import Category from "./components/Category";
 import Collections from "./components/Collections";
 import CardItems from "./components/CardItems";
-import Footer from "./components/Footer";
 import ImageSlider from "./components/ImageSlider";
 import { URL } from "../../config";
 
