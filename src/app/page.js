@@ -10,7 +10,6 @@ import { URL } from "../../config";
 
 const Home = () => {
   const [homeData, setHomeData] = useState([]);
-  let categories = "";
 
   const fetchData = async () => {
     try {
