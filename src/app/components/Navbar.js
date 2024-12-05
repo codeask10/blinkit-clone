@@ -5,8 +5,10 @@ import brandImageUrl from "@/app/assets/img.webp";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineShoppingCart } from "react-icons/md";
+
 import { CartContext } from "../context/CartContext";
 import { UserContext } from "../context/UserContext";
+import { CommonContext } from "../context/CommonContext";
 import Cart from "./Cart";
 import Link from "next/link";
 import Login from "./Login";
@@ -16,7 +18,8 @@ import UserDetails from "./UserDetails";
 const Navbar = () => {
   const { cart } = useContext(CartContext);
   const { user } = useContext(UserContext);
-
+  const { common } = useContext(CommonContext);
+  const { logo } = common?.organization;
   const [isOpen, setOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -56,7 +59,7 @@ const Navbar = () => {
         <div className="hidden lg:flex w-2/12 h-full justify-center items-center border-r border-gray-300">
           <Link href="/">
             <Image
-              src={brandImageUrl}
+              src={logo || "/logo.png"}
               width={120}
               height={130}
               alt="Brand Logo"
