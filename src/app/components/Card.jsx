@@ -21,7 +21,7 @@ const Card = ({ item }) => {
     const qty = selectedVariant?.name || "N/A";
     const mrp = parseInt(selectedVariant?.storeSpecificData?.[0]?.mrp || "0", 10);
     const discount = parseInt(selectedVariant?.storeSpecificData?.[0]?.discount || "0", 10);
-    const discount_price = mrp - (mrp * (discount / 100));
+    const discount_price = mrp - discount;
 
     return (
         <>
