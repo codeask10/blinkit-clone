@@ -6,8 +6,6 @@ import Link from "next/link";
 import { CartContext } from "../context/CartContext";
 import Select from "./Select";
 
-const truncateText = (text, length) =>
-    text.length > length ? `${text.substring(0, length)}...` : text;
 
 const Card = ({ item }) => {
     const { addToCart, decreaseQty, getCartItemQty } = useContext(CartContext);
@@ -25,12 +23,12 @@ const Card = ({ item }) => {
 
     return (
         <>
-            <div className="flex flex-col h-[250px] md:h-[300px] w-[200px] box-border mt-5">
+            <div className="flex flex-col w-full max-w-[180px] mx-auto mt-3 ">
                 {/* Image Container */}
-                <div className="h-[180px] w-[90%] border border-gray-400 rounded-lg relative flex justify-center mx-auto">
+                <div className="h-[160px] w-[160px] border border-gray-200 rounded-lg relative flex justify-center ">
                     <Link href={`/products/${slug}`}>
                         <Image
-                            className="object-cover w-[130px] h-full p-2 "
+                            className="object-cover w-full h-[90%] p-2 "
                             src={url}
                             alt={item_name}
                             width="0"
@@ -39,7 +37,7 @@ const Card = ({ item }) => {
                         />
                     </Link>
                     {getCartItemQty(id) ? (
-                        <div className="absolute bottom-[0.75rem] right-[1rem] flex items-center gap-2 bg-red-500 text-white p-2 rounded-md text-lg">
+                        <div className="absolute bottom-[0.65rem] right-[0.50rem] flex items-center gap-2 bg-red-500 text-white p-1 rounded-md text-lg">
                             <button onClick={() => {
                                 decreaseQty(id)
                             }}>
@@ -52,7 +50,7 @@ const Card = ({ item }) => {
                         </div>
                     ) : (
                         <button
-                            className="absolute bottom-[0.75rem] right-[1rem] bg-red-500 text-white p-2 rounded-md text-lg"
+                            className="absolute bottom-[0.65rem] right-[0.50rem] bg-red-500 text-white p-2 rounded-md text-lg"
                             onClick={() => addToCart(id)}
                         >
                             <FaPlus />
@@ -61,10 +59,10 @@ const Card = ({ item }) => {
                 </div>
 
                 {/* List of Details */}
-                <ul className="mt-2 font-bold tracking-wide list-none px-0">
-                    <li className="pb-1">{company_name}</li>
-                    <li className="pb-1">{truncateText(item_name, 30)}</li>
-                </ul>
+                <div className="flex flex-col mt-2 h-[60px]">
+                    <span className="font-bold text-md text-gray-700 truncate">{company_name}</span>
+                    <span className="text-md text-gray-600 truncate">{item_name}</span>
+                </div>
                 {
                     item.variants.length > 1 ? <Select variants={item.variants} selectedVariant={selectedVariant} setSelectedVariant={setSelectedVariant} /> : <div className="text-md font-base my-1">{qty}</div>
                 }
