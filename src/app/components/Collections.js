@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
+import Link from "next/link";
 
 const Collections = ({ collections }) => {
   return (
@@ -12,16 +13,18 @@ const Collections = ({ collections }) => {
             key={uuidv4()}
             className={`flex-shrink-0 bg-gray-100 rounded-lg `}
           >
-            <div className="p-4">
-              <Image
-                src={collection?.imageUrl}
-                width="0"
-                height="0"
-                sizes="100vw"
-                alt="Image Collection"
-                className={`object-cover w-40 h-40 rounded-lg`}
-              />
-            </div>
+            <Link href={`${collection?.link}`}>
+              <div className="p-4">
+                <Image
+                  src={collection?.imageUrl}
+                  width="0"
+                  height="0"
+                  sizes="100vw"
+                  alt="Image Collection"
+                  className={`object-cover w-40 h-40 rounded-lg`}
+                />
+              </div>
+            </Link>
           </div>
         ))}
     </div>

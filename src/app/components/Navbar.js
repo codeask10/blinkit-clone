@@ -1,25 +1,25 @@
 "use client";
 import React, { useContext, useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import brandImageUrl from "@/app/assets/img.webp";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { IoIosSearch } from "react-icons/io";
-import { MdOutlineShoppingCart } from "react-icons/md";
 
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { IoIosSearch } from "react-icons/io";
+import { FaUserCircle } from "react-icons/fa";
+import Link from "next/link";
+import Cart from "./Cart";
+import Login from "./Login";
+import UserDetails from "./UserDetails";
 import { CartContext } from "../context/CartContext";
 import { UserContext } from "../context/UserContext";
 import { CommonContext } from "../context/CommonContext";
-import Cart from "./Cart";
-import Link from "next/link";
-import Login from "./Login";
-import { FaUserCircle } from "react-icons/fa";
-import UserDetails from "./UserDetails";
 
 const Navbar = () => {
   const { cart } = useContext(CartContext);
   const { user } = useContext(UserContext);
   const { common } = useContext(CommonContext);
   const { logo } = common?.organization;
+
   const [isOpen, setOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -28,14 +28,13 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      // Check if the click is outside the modal
       if (
         modalRef.current &&
         !modalRef.current.contains(event.target) &&
         buttonRef.current &&
         !buttonRef.current.contains(event.target)
       ) {
-        setIsDropdownVisible(false); // Close the dropdown
+        setIsDropdownVisible(false);
       }
     };
 
@@ -47,6 +46,7 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, [isDropdownVisible]);
+
   const toggleDropdown = () => {
     setIsDropdownVisible((prev) => !prev);
   };
@@ -61,20 +61,22 @@ const Navbar = () => {
             <Image
               src={logo || "/logo.png"}
               width={120}
-              height={130}
+              height={100}
               alt="Brand Logo"
             />
           </Link>
         </div>
 
-        {/* Main Content Section */}
-        <div className="flex-1 flex justify-between items-center px-4 lg:px-8">
-          {/* Address Section */}
-          <div className="flex flex-col">
-            <span className="text-lg font-bold">Delivery in 8 minutes</span>
-            <div className="flex items-center">
+        {/* Main Content */}
+        <div className="flex-1 flex justify-between items-center px-4 md:px-6">
+          {/* Location (Always Visible) */}
+          <div className="flex flex-col items-start">
+            <span className="text-sm md:text-base font-bold">
+              Delivery in 8 minutes
+            </span>
+            <div className="flex items-center text-xs md:text-sm">
               <span>ZopSmart Parangi Palaya, Sector 2</span>
-              <IoMdArrowDropdown className="text-xl ml-1" />
+              <IoMdArrowDropdown className="text-lg ml-1" />
             </div>
           </div>
 
@@ -94,7 +96,7 @@ const Navbar = () => {
           {!user ? (
             <button
               onClick={() => setLoginModalOpen(true)}
-              className="text-lg p-2 font-medium cursor-pointer"
+              className="text-sm md:text-lg font-medium cursor-pointer"
             >
               Login
             </button>
@@ -103,13 +105,11 @@ const Navbar = () => {
               <button
                 ref={buttonRef}
                 type="button"
-                className="border-b-4 border-b-red-500"
+                className="flex items-center"
                 onClick={toggleDropdown}
               >
-                <div className="flex gap-1">
-                  <FaUserCircle className="h-10 w-8" />
-                  <div className="p-2">Account</div>
-                </div>
+                <FaUserCircle className="h-6 w-6 md:h-8 md:w-8 text-gray-700" />
+                <span className="ml-2 hidden md:block">Account</span>
               </button>
               {isDropdownVisible && (
                 <UserDetails
@@ -120,30 +120,25 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Cart Button */}
-          <div className="hidden lg:flex ">
-            <button
-              onClick={() => {
-                setOpen(!isOpen);
-              }}
-              className="bg-green-700 text-white font-bold py-4 px-4 rounded-lg relative flex items-center"
-            >
-              {cart?.items?.length > 0 ? (
-                <div className="flex ">
-                  {" "}
-                  <MdOutlineShoppingCart />{" "}
-                  <div className="absolute top-0 left-8 bg-red rounded-full ">
-                    {cart?.items?.length}
-                  </div>
+          {/* Cart Button (Responsive) */}
+          <button
+            onClick={() => setOpen(!isOpen)}
+            className="bg-green-700 text-white font-bold py-2 px-3 rounded-lg relative flex items-center text-sm md:text-base"
+          >
+            {cart?.items?.length > 0 ? (
+              <div className="flex items-center">
+                <MdOutlineShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
+                <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                  {cart?.items?.length}
                 </div>
-              ) : (
-                <>
-                  <MdOutlineShoppingCart className="w-5 h-5 mr-2" />
-                  <span>My Cart</span>
-                </>
-              )}
-            </button>
-          </div>
+              </div>
+            ) : (
+              <>
+                <MdOutlineShoppingCart className="w-5 h-5 md:w-6 md:h-6 mr-2" />
+                <span className="hidden md:block">My Cart</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
       {isLoginModalOpen && <Login setLoginModalOpen={setLoginModalOpen} />}
