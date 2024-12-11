@@ -5,16 +5,15 @@ import Category from "./components/Category";
 import Collections from "./components/Collections";
 import CardItems from "./components/CardItems";
 import ImageSlider from "./components/ImageSlider";
-import { URL } from "../../config";
+import { getHomeData } from "./api/homeApi";
 
 const Home = () => {
   const [homeData, setHomeData] = useState([]);
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${URL}/api/layout/home`);
-      const res = await response.json();
-      setHomeData(res.data.page.layouts);
+      const response = await getHomeData();
+      setHomeData(response.data.page.layouts);
     } catch (error) {
       console.error("Error Occured", error);
     }
@@ -35,22 +34,26 @@ const Home = () => {
                 return <Carousel key={layout.name} value={layout.value} />;
               case "CategoryCollection":
                 return (
-                  <Category
-                    key={`Category-Collection-${index}`}
-                    title={layout.value.title}
-                    categoryCollection={layout.value.collection}
-                    layoutType={layout.data.layoutType}
-                    shape={layout.data.shape}
-                  />
+                  layout.value.collection && (
+                    <Category
+                      key={`Category-Collection-${index}`}
+                      title={layout.value.title}
+                      categoryCollection={layout.value.collection}
+                      layoutType={layout.data.layoutType}
+                      shape={layout.data.shape}
+                    />
+                  )
                 );
               case "ProductCollection":
                 return (
-                  <CardItems
-                    key={layout.value.title}
-                    data={layout.data}
-                    title={layout.data.title}
-                    collection={layout.value.collection}
-                  />
+                  layout.value.collection && (
+                    <CardItems
+                      key={layout.value.title}
+                      data={layout.data}
+                      title={layout.data.title}
+                      collection={layout.value.collection}
+                    />
+                  )
                 );
               case "ImageCollection":
                 return (

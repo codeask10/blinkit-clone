@@ -28,12 +28,12 @@ const Card = ({ item }) => {
                 <div className="h-[160px] w-[160px] border border-gray-200 rounded-lg relative flex justify-center ">
                     <Link href={`/products/${slug}`}>
                         <Image
-                            className="object-cover w-full h-[90%] p-2 "
                             src={url}
                             alt={item_name}
                             width="0"
                             height="0"
                             sizes="100vw"
+                            style={{ objectPosition: "cover", width: "100%", height: "90%", padding: "0.2rem" }}
                         />
                     </Link>
                     {getCartItemQty(id) ? (

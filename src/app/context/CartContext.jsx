@@ -1,11 +1,17 @@
 "use client";
 
-import React, { createContext, useState, useEffect, useCallback } from "react";
-import { URL } from "../../../config";
+import React, { createContext, useState, useEffect, useCallback, useContext } from "react";
+
+import { getCartData, updateCartData } from "../api/cartApi";
+import { UserContext } from "./UserContext";
+import { CommonContext } from "./CommonContext";
 
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+    const { common } = useContext(CommonContext);
+    const storeId = common?.organization?.defaultStoreId;
+    const { token } = useContext(UserContext);
     const [cart, setCart] = useState(null);
     const [items, setItems] = useState([]);
     const address = {
@@ -15,70 +21,47 @@ export const CartProvider = ({ children }) => {
         state: "Karnataka",
         countryCode: "IN",
         latitude: 12.9088233,
-        longitude: 77.6495937
+        longitude: 77.6495937,
     };
 
-    const getCart = async () => {
+    const fetchCart = useCallback(async () => {
+        if (!token || !storeId) return;
         try {
-            const response = await fetch(`${URL}/api/cart?storeId=25539&orderType=DELIVERY`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const result = await response.json();
-            if (result.status === "SUCCESS" && result.data?.cart?.items) {
-                setCart(result.data.cart);
-            } else if (result.status === "ERROR") {
-                console.error(result.message);
-                alert(result.message);
-            }
+            const result = await getCartData(token, storeId);
+            setCart(result.data.cart);
         } catch (error) {
             console.error("Error fetching cart data:", error);
         }
-    };
+    }, [token, storeId]);
 
-    const updateCart = async () => {
+    const updateCart = useCallback(async () => {
         try {
-            const response = await fetch(`${URL}/api/cart`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({ cart: { items: items }, orderType: "DELIVERY", storeId: "25539", address: address })
-            });
-            const result = await response.json();
-            if (result.status === "SUCCESS") {
-                setCart(result.data.cart);
-            } else {
-                console.error("API Error:", result.message);
-                alert(result.message);
-            }
+            const result = await updateCartData(items, address, token, storeId);
+            setCart(result.data.cart);
         } catch (error) {
-            console.error("Network Error:", error);
-            alert("An error occurred while updating the cart. Please try again.");
+            console.error("Error updating cart:", error);
         }
-    };
+    }, [items, token, storeId]);
 
     useEffect(() => {
-        getCart();
-    }, []);
+        if (token) {
+            fetchCart();
+        }
+        else {
+            setCart(null);
+            setItems([]);
+        }
+    }, [fetchCart, token]);
 
     useEffect(() => {
-        if (items.length > 0) {
-            updateCart();
-        }
-    }, [items]);
+        if (items.length > 0) updateCart();
+    }, [items, updateCart]);
 
     const addToCart = (id) => {
         const existingItem = cart?.items.find((item) => item.product.id === id);
         if (existingItem) {
-            let { product, q, t } = existingItem;
-            q = parseInt(q) + 1
-            const val = ({ q: q.toString(), id: product.id.toString(), t });
-            setItems([val]);
+            const { product, q, t } = existingItem;
+            setItems([{ id: product.id.toString(), q: (parseInt(q) + 1).toString(), t }]);
         } else {
             setItems([{ id: id.toString(), q: "1", t: Date.now() }]);
         }
@@ -87,21 +70,14 @@ export const CartProvider = ({ children }) => {
     const decreaseQty = (id) => {
         const existingItem = cart?.items.find((item) => item.product.id === id);
         if (existingItem) {
-            let { product, q, t } = existingItem;
-            q = parseInt(q);
-            if (q > 1) {
-                q = q - 1;
-                const val = ({ q: q.toString(), id: product.id.toString(), t });
-                setItems(val);
-            } else {
-                const val = ({ q: q.toString(), id: product.id.toString(), t });
-                setItems(val);
+            const { product, q, t } = existingItem;
+            if (parseInt(q) > 1) {
+                setItems([{ id: product.id.toString(), q: (parseInt(q) - 1).toString(), t }]);
             }
         }
     };
 
     const getCartItemQty = (itemId) => {
-
         const item = cart?.items?.find((item) => item.product.id === itemId);
         return item ? parseInt(item.q) : 0;
     };

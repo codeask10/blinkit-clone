@@ -2,7 +2,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { IoMdArrowDropdown } from "react-icons/io";
-
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { IoIosSearch } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
@@ -13,10 +12,11 @@ import UserDetails from "./UserDetails";
 import { CartContext } from "../context/CartContext";
 import { UserContext } from "../context/UserContext";
 import { CommonContext } from "../context/CommonContext";
+import BrandLogo from "../assets/img.webp";
 
 const Navbar = () => {
   const { cart } = useContext(CartContext);
-  const { user } = useContext(UserContext);
+  const { isLogin } = useContext(UserContext);
   const { common } = useContext(CommonContext);
   const { logo } = common?.organization;
 
@@ -59,7 +59,7 @@ const Navbar = () => {
         <div className="hidden lg:flex w-2/12 h-full justify-center items-center border-r border-gray-300">
           <Link href="/">
             <Image
-              src={logo || "/logo.png"}
+              src={logo || BrandLogo}
               width={120}
               height={100}
               alt="Brand Logo"
@@ -93,7 +93,7 @@ const Navbar = () => {
           </div>
 
           {/* Login Section */}
-          {!user ? (
+          {!isLogin ? (
             <button
               onClick={() => setLoginModalOpen(true)}
               className="text-sm md:text-lg font-medium cursor-pointer"

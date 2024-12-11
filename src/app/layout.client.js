@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import { CommonContext } from "./context/CommonContext";
 import { URL } from "../../config";
 import BackToTopButton from "./components/BackToTopButton";
+import { fetchData } from "./api/globalApi";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,33 +30,25 @@ export default function RootLayout({ children }) {
     navigation: [],
   });
 
-  const fetchData = async (path, key) => {
+  const fetchCommonData = async () => {
     try {
-      const response = await fetch(`${URL}/api/${path}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const result = await response.json();
+      const organizationData = await fetchData(`${URL}/api/organization`);
+      const navData = await fetchData(`${URL}/api/nav`);
+      const navigationData = await fetchData(`${URL}/api/navigation`);
 
-      if (result.status === "SUCCESS") {
-        setCommon((prevCommon) => ({
-          ...prevCommon,
-          [key]: result.data,
-        }));
-      } else if (result.status === "ERROR") {
-        console.error(result.message);
-        alert(result.message);
-      }
+      setCommon({
+        organization: organizationData.data,
+        nav: navData.data,
+        navigation: navigationData.data,
+      });
     } catch (error) {
-      console.error(`Error fetching ${path} data:`, error);
+      console.error("Error fetching common data:", error);
+      alert("An error occurred while fetching common data.");
     }
   };
+
   useEffect(() => {
-    fetchData("organization", "organization");
-    fetchData("nav", "nav");
-    fetchData("navigation", "navigation");
+    fetchCommonData();
   }, []);
 
   return (
@@ -64,14 +57,14 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CommonContext.Provider value={{ common }}>
-          <CartProvider>
-            <UserProvider>
+          <UserProvider>
+            <CartProvider>
               <Navbar />
               {children}
               <BackToTopButton />
               <Footer />
-            </UserProvider>
-          </CartProvider>
+            </CartProvider>
+          </UserProvider>
         </CommonContext.Provider>
       </body>
     </html>

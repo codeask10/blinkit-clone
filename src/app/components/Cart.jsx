@@ -1,22 +1,19 @@
 "use client"
 import React, { useContext, useState, useEffect } from "react";
 import Image from "next/image";
+
 import { CartContext } from "../context/CartContext";
+import { UserContext } from "../context/UserContext";
 import Login from "./Login";
-// import { getCartItemQty, handleDecreaseQty, handleIncreaseQty } from "../utils/cart";
+
 
 const Cart = ({ open, setOpen }) => {
     const { cart, addToCart, decreaseQty } = useContext(CartContext);
+    const { isLogin } = useContext(UserContext);
     const { items = [] } = cart || {};
 
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
-    // Check for user login status on component mount
-    useEffect(() => {
-        const user = localStorage.getItem("user");
-        setIsUserLoggedIn(!!user);
-    }, []);
     // Calculate bill details
     const totalPrice = items?.reduce((acc, item) => acc + item.mrp * item.q, 0);
     const totalDiscount = items?.reduce((acc, item) => acc + item.discount * item.q, 0);
@@ -137,10 +134,10 @@ const Cart = ({ open, setOpen }) => {
                         <span>Total:</span>
                         <span>₹ {subTotal.toFixed(2)}</span>
                     </div>
-                    {!isUserLoggedIn && <button onClick={() => setLoginModalOpen(!isLoginModalOpen)} className="mt-2 w-full bg-red-500 text-white p-2 rounded">
+                    {!isLogin && <button onClick={() => setLoginModalOpen(!isLoginModalOpen)} className="mt-2 w-full bg-red-500 text-white p-2 rounded">
                         Login
                     </button>}
-                    {isUserLoggedIn && <button className="mt-2 w-full bg-red-500 text-white p-2 rounded">
+                    {isLogin && <button className="mt-2 w-full bg-red-500 text-white p-2 rounded">
                         Checkout
                     </button>
                     }

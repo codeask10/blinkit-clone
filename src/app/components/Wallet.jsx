@@ -1,63 +1,36 @@
 "use client"
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { GiWallet } from "react-icons/gi";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 
-import { URL } from "../../../config";
+import { UserContext } from "../context/UserContext";
+import { getWallet, getTransaction } from "../api/userApi";
+
 
 const Wallet = () => {
     const [wallet, setWallet] = useState([]);
     const [walletMoney, setWalletMoney] = useState([]);
+    const { token } = useContext(UserContext);
 
     const fetchWallet = async () => {
         try {
-            const response = await fetch(`${URL}/api/wallet`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const result = await response.json();
-            if (result.status === "SUCCESS") {
-                setWallet(result.data);
+            const responseWallet = await getWallet(token);
+            const responseTransaction = await getTransaction(token);
+            if (responseWallet.status === "SUCCESS" && responseTransaction.status === "SUCCESS") {
+                setWallet(responseWallet.data);
+                setWalletMoney(responseTransaction.data);
             }
-            else if (result.status === "ERROR") {
+            else if (responseWallet.status === "ERROR" || responseTransaction.status === "ERROR") {
                 alert(result.message);
             }
-
         } catch (error) {
             console.error("Error Occured", error);
             alert("Error fetching wallet data:", error);
         }
     }
-
-    const fetchWalletTransaction = async () => {
-        try {
-            const response = await fetch(`${URL}/api/wallet-transactions`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const result = await response.json();
-            if (result.status === "SUCCESS") {
-                setWalletMoney(result.data);
-            }
-            else if (result.status === "ERROR") {
-                alert(result.message);
-            }
-
-        } catch (error) {
-            console.error("Error Occured", error);
-            alert("Error fetching wallet-transaction data:", error);
-        }
-    }
     useEffect(() => {
         fetchWallet();
-        fetchWalletTransaction();
     }, []);
     return (
         <div className="bg-white h-full shadow-md rounded-md px-8 pt-6 pb-8">

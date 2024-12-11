@@ -1,35 +1,30 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { IoCartOutline } from "react-icons/io5";
 import Link from 'next/link';
 
-import { URL } from '../../../config';
+import { UserContext } from '../context/UserContext';
 import { Filter } from '../utils/constant';
+import { getUserOrder } from '../api/userApi';
 
 const Order = () => {
+    const { token } = useContext(UserContext);
     const [order, setOrder] = useState([]);
+
     const fetchOrder = async () => {
         try {
-            const response = await fetch(`${URL}/api/order`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const result = await response.json();
-            console.log(result);
-            if (result.status === "SUCCESS") {
-                setOrder(result.data.order);
+            const response = await getUserOrder(token);
+            if (response.status === "SUCCESS") {
+                setOrder(response.data.order);
             }
-            else if (result.status === "ERROR") {
-                alert(result.message);
+            else if (response.status === "ERROR") {
+                alert(response.message);
             }
 
         } catch (error) {
             console.error("Error Occured", error);
-            alert("Error fetching wallet-transaction data:", error);
+            alert("Error fetching order data:", error);
         }
     }
 

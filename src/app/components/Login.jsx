@@ -2,7 +2,7 @@
 
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import { URL } from "../../../config";
+import { loginUser, registerUser } from "../api/authApi";
 
 const Login = ({ setLoginModalOpen }) => {
     const [isSignIn, setIsSignIn] = useState(true);
@@ -16,29 +16,16 @@ const Login = ({ setLoginModalOpen }) => {
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${URL}/api/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: signIn.email, password: signIn.password, remember: signIn.remember }),
-            });
-            const result = await response.json();
+            const response = await loginUser(signIn.email, signIn.password, signIn.remember);
 
-            if (result.status === "SUCCESS") {
-                const userDetails = {
-                    token: result.data.customer.accessToken,
-                    name: result.data.customer.name,
-                    email: result.data.customer.defaultEmail.email,
-                    id: result.data.customer.defaultEmail.customerId
-                }
-                login(userDetails);
+            if (response.status === "SUCCESS") {
+                login(response.data.customer);
                 setSignIn({ email: "", password: "", "remember": false });
                 alert("Account logged in successfully");
                 setLoginModalOpen(false);
             }
-            else if (result.status === "ERROR") {
-                alert(result.message);
+            else if (response.status === "ERROR") {
+                alert(response.message);
             }
         } catch (error) {
             console.error("Login error:", error);
@@ -51,25 +38,16 @@ const Login = ({ setLoginModalOpen }) => {
     };
     const handleSignUpSubmit = async (e) => {
         e.preventDefault();
-        console.log(signUp);
         try {
-            const response = await fetch(`${URL}api/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: signUp.name, email: signUp.email, password: signUp.password, lastName: signUp.lastName }),
-            });
-            const result = await response.json();
-            console.log(result);
+            const response = await registerUser(signUp.name, signUp.lastName, signUp.email, signUp.password);
 
-            if (result.status === "SUCCESS") {
+            if (response.status === "SUCCESS") {
                 setSignUp({ name: "", lastName: "", email: "", password: "" });
                 alert("Account logged in successfully", "success");
                 setIsSignIn(true);
             }
-            else if (result.status === "ERROR") {
-                alert(result.message);
+            else if (response.status === "ERROR") {
+                alert(response.message);
             }
         } catch (error) {
             console.error("Login error:", error);

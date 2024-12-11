@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { URL } from "../../../config";
+import { UserContext } from "../context/UserContext";
+import { changePassword } from "../api/userApi";
 
 const ChangePassword = () => {
-    const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
+    const { user, token } = useContext(UserContext);
     const { id } = user || {}
 
     const [oldPassword, setOldPassword] = useState("");
@@ -35,16 +36,8 @@ const ChangePassword = () => {
                 alert("New password must be at least 8 characters long.");
                 return;
             }
-            const response = await fetch(`${URL}/api/password`, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({ customerId: id, oldPassword: oldPassword, newPassword: newPassword, confirmNewPassword: confirmPassword })
-            });
-            const result = await response.json();
-            if (result.status === "SUCCESS") {
+            const response = await changePassword(token, id, oldPassword, newPassword);
+            if (response.status === "SUCCESS") {
                 alert("Successfully Changed Password");
                 setOldPassword("");
                 setNewPassword("");
