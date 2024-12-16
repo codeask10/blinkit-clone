@@ -54,7 +54,7 @@ const UserProvider = ({ children }) => {
   }, [fetchUser, isLogin, token]);
 
   return (
-    <UserContext.Provider value={{ user, isLogin, token, isLoginModalOpen, login, logout, }}>
+    <UserContext.Provider value={{ user, isLogin, token, isLoginModalOpen, setLoginModalOpen, login, logout, }}>
       {children}
     </UserContext.Provider>
   );
